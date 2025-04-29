@@ -10,6 +10,16 @@
 # Android扫码下载体验
 <img src='./screenshots/rnwechat.png'>
 
+# 运行失败的解决办法
+
+```bash
+npx rimraf node_modules
+npm cache clean --force
+rm $HOME/.android/debug.keystore # 如果显示被占用，删除失败，可以重启电脑再试
+npm install
+npm run android
+```
+
 # 运行方法
 1. 克隆代码：
 

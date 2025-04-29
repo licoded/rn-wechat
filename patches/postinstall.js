@@ -2,6 +2,7 @@ const { applyPatch } = require("./applyPatch");
 
 const patches = [
     {
+        // ERROR: node_modules/react-native-scrollable-tab-view/SceneComponent.js: A trailing comma is not permitted after the rest element (9:32)
         filePath: 'node_modules/react-native-scrollable-tab-view/SceneComponent.js',
         regExp: /, }/g,
         replaced_string: ' }',
