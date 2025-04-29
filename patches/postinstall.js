@@ -1,25 +1,23 @@
-const fs = require('fs');
+const { applyPatch } = require("./applyPatch");
 
-const filePath = 'node_modules/react-native-scrollable-tab-view/SceneComponent.js';
+const patches = [
+    {
+        filePath: 'node_modules/react-native-scrollable-tab-view/SceneComponent.js',
+        regExp: /, }/g,
+        replaced_string: ' }',
+    },
+    {
+        filePath: 'node_modules/react-native-image-crop-picker/android/build.gradle',
+        regExp: /id.zelory:compressor:2.1.0/g,
+        replaced_string: 'id.zelory:compressor:2.1.1',
+    },
+    {
+        filePath: 'node_modules/react-native-fetch-blob/android/build.gradle',
+        regExp: /com.android.tools.build:gradle:2.2.3/g,
+        replaced_string: 'com.android.tools.build:gradle:2.3.0',
+    },
+];
 
-fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-
-    const modifiedData = data.replace(
-        /, }/g,
-        " }"
-    );
-    // const modifiedData = data;
-
-    fs.writeFile(filePath, modifiedData, 'utf8', (err) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-
-        console.log('File modified successfully!');
-    });
+patches.forEach(({filePath, regExp, replaced_string}) => {
+    applyPatch(filePath, regExp, replaced_string);
 });
