@@ -1,12 +1,3 @@
-# RNWeChat
-* 使用ReactNative开发的仿微信客户端，**支持Android和iOS**，欢迎大家给个star或fork，谢谢~~
-* 如果在项目构建过程中有任何问题，欢迎提issue，我有空一定帮忙解答~~
-* 我新建了一个QQ群，各位如果有任何与该项目有关的问题，或者想交流下ReactNative相关的技术，都可以加进来：419213248
-* iOS的朋友如果运行项目出现问题，可以参考<a href="./iOS-README.md">这个文档</a>
-
-# Android扫码下载体验
-<img src='./screenshots/qr-code.png'>
-
 # 运行失败的解决办法
 
 ```bash
@@ -21,36 +12,26 @@ npm run android
 1. 克隆代码：
 
 ```
-git clone git@github.com:yubo725/rn-wechat.git
+git clone git@github.com:licoded/rn-wechat.git --branch release/try-run-under-windows
 ```
 
 2. 进入项目根目录并安装依赖：
 
 ```
-cd RNWeChat
+cd rn-wechat
 npm install
 ```
 
-3. 运行项目到模拟器或真机：
+3. 运行项目到安卓模拟器或真机：
 
 ```
-// Android
-react-native run-android
-
-// iOS
-react-native run-ios
+npm install
+npm run start-avd
+# 新建第2个terminal
+npm run start
+# 新建第3个terminal
+npm run android # 打包debug apk包，并安装到安卓虚拟机
 ```
-
-# 注意
-* **目前接口做了限制，频繁请求的话可能导致IP被暂时封掉，而且每个IP每天的请求流量也是有限制的，所以不要频繁请求接口**
-
-* **若在Linux或Mac环境打Android包时遇到错误提示：**
-
-> Make sure you have an Android emulator running or a device connected and have set up your Android development environment
-
-**请确保项目的android目录下的gradlew文件有可执行权限，若无可执行权限，改成可执行**
-
-* Android打release包时请使用自己的签名文件和签名配置，具体请参考文档：[打包APK](https://reactnative.cn/docs/0.51/signed-apk-android/)
 
 # 已实现功能
 - [x] 登录、注册
