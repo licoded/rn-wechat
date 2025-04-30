@@ -14,9 +14,9 @@ export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputUsername: '',
-      username: '',
-      password: '',
+      inputUsername: "17189540780",
+      username: "17189540780",
+      password: "Fu7",
       showProgress: false,
       avatar: ''
     };
@@ -70,9 +70,14 @@ export default class LoginScreen extends Component {
           <View style={styles.pwdView}>
             <View style={styles.pwdContainer}>
               <Text style={{fontSize: 16}}>密码：</Text>
-              <TextInput secureTextEntry={true} onChangeText={(text) => {
-                this.setState({password: text})
-              }} style={styles.textInput} underlineColorAndroid="transparent"/>
+              <TextInput
+                value={this.state.password}
+                secureTextEntry={true}
+                onChangeText={(text) => {
+                  this.setState({password: text})
+                }}
+                style={styles.textInput} underlineColorAndroid="transparent"
+              />
             </View>
             <View style={styles.pwdDivider}></View>
             <TouchableOpacity activeOpacity={0.6} onPress={() => this.login()}>
