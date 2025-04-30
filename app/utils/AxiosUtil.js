@@ -1,14 +1,6 @@
-const baseURL = 'http://licoded.site:9300';
+import { buildUrlWithParams } from "./UrlUtil";
 
-function buildUrlWithParams(baseUrl, url, params) {
-  const urlObj = new URL(url, baseUrl);
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      urlObj.searchParams.append(key, value);
-    });
-  }
-  return urlObj.toString();
-}
+const baseURL = 'http://licoded.site:9300';
 
 /**
  *
