@@ -29,7 +29,7 @@ let config = {
   /*
    * Application AppKey
    */
-  appkey: 'yubo725#rnwechat',
+  appkey: '1182250405193982#demo',
   /*
    * Whether to use HTTPS
    * @parameter {Boolean} true or false
