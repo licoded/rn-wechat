@@ -7,6 +7,7 @@ import StorageUtil from '../utils/StorageUtil';
 import LoadingView from '../views/LoadingView';
 import Utils from '../utils/Utils';
 import {Dimensions, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { post } from '../utils/AxiosUtil';
 
 const {width} = Dimensions.get('window');
 
@@ -116,41 +117,30 @@ export default class LoginScreen extends Component {
       Toast.showShortCenter('用户名或密码不能为空');
       return;
     }
-    let url = 'http://app.yubo725.top/login2';
-    let formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    this.setState({showProgress: true});
-    fetch(url, {method: 'POST', body: formData})
-      .then((res) => res.json())
-      .then((json) => {
+
+    const params = {
+      nickname: username,
+      telephone: username,
+      password: password,
+      sms_code: '',
+    };
+    console.log('login params', params);
+
+    // this.setState({ showProgress: true });
+    post('/login', params)
+      .then((userData) => {
         this.setState({showProgress: false});
-        if (!Utils.isEmpty(json)) {
-          if (json.code === 1) {
-            // 登录服务器成功，再登录NIM的服务器
-            let data = json.msg;
-            if (data != null) {
-              let userInfo = {
-                username: username,
-                nick: data.nick,
-                avatar: data.avatar
-              };
-              let key = 'userInfo-' + username;
-              StorageUtil.set(key, {'info': userInfo});
-              Toast.showShortCenter('登录聊天服务器...');
-              this.registerHXListener();
-              this.loginToHX(username, password);
-            }
-          } else {
-            Toast.showShortCenter(json.msg);
-          }
-        } else {
-          Toast.showShortCenter('登录失败');
-        }
-      }).catch((e) => {
-      this.setState({showProgress: false});
-      Toast.showShortCenter('网络请求出错: ' + e);
-    });
+        const { uuid } = userData;
+        let key = "userInfo-" + uuid;
+        StorageUtil.set(key, { info: userData });
+        Toast.showShortCenter('登录聊天服务器...');
+        this.registerHXListener();
+        this.loginToHX(uuid, password)
+      })
+      .catch((resp) => {
+        this.setState({ showProgress: false });
+        Toast.showShortCenter(resp.message);
+      });
   }
 
   loginToHX(username, password) {
