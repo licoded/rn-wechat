@@ -17,6 +17,9 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
+import { post } from '../utils/AxiosUtil';
+import StorageUtil from '../utils/StorageUtil';
+import { getAvatorUrl } from '../utils/StaticUtil';
 
 const {width} = Dimensions.get('window');
 
@@ -44,15 +47,21 @@ export default class ContactsScreen extends Component {
   }
 
   getContacts() {
-    var url = "http://app.yubo725.top/friends"; // 新接口
-    fetch(url).then((res) => res.json())
-      .then((json) => {
-        UserInfoUtil.setUserInfo(json);
-        this.setState({
-          loadingState: Global.loadSuccess,
-          contactData: json
-        })
-      })
+    StorageUtil.get('username', (error, object) => {
+      if (!error && object && object.username) {
+        const uuid = object.username;
+        const params = { owner_id: uuid };
+        post('/contact/getUserList', params).then((contactData) => {
+          console.log('contactData', contactData);
+          
+          UserInfoUtil.setUserInfo(contactData);
+          this.setState({
+            loadingState: Global.loadSuccess,
+            contactData,
+          });
+        });
+      }
+    });
   }
 
   render() {
@@ -106,20 +115,20 @@ export default class ContactsScreen extends Component {
     var contacts = this.state.contactData;
     for (var i = 0; i < contacts.length; i++) {
       // var pinyin = PinyinUtil.getFullChars(contacts[i].name);
-      var pinyin = contacts[i].pinyin.toUpperCase();
+      var pinyin = contacts[i].pinyin || contacts[i].user_name;
       var firstLetter = pinyin.substring(0, 1);
       if (firstLetter < 'A' || firstLetter > 'Z') {
         firstLetter = '#';
       }
       let icon = require('../../images/avatar.png');
       if (!Utils.isEmpty(contacts[i].avatar)) {
-        icon = {uri: contacts[i].avatar};
+        icon = {uri: getAvatorUrl(contacts[i].avatar)};
       }
       listData.push({
         key: index++,
         icon: icon,
-        title: contacts[i].name,
-        nick: contacts[i].nick,
+        title: contacts[i].name || contacts[i].user_name,
+        nick: contacts[i].nick || contacts[i].user_name,
         pinyin: pinyin,
         firstLetter: firstLetter,
         sectionStart: false,
@@ -155,6 +164,8 @@ export default class ContactsScreen extends Component {
       }
     }
     this.listData = listData;
+    console.log('listData', listData);
+    
     return (
       <View style={styles.container}>
         <TitleBar nav={this.props.navigation}/>
@@ -162,6 +173,7 @@ export default class ContactsScreen extends Component {
         <View style={styles.content}>
           <FlatList
             ref={'list'}
+            keyExtractor={item => item.key.toString()}
             data={listData}
             renderItem={this._renderItem}
             getItemLayout={this._getItemLayout}
